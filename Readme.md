@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url] [![Dependency status][dependency-image]][dependency-url]
 
 * Студент: [Марина Егерева](https://up.htmlacademy.ru/javascript/8/user/54561).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Воронин](https://htmlacademy.ru/profile/id245996).
 
 ---
 
