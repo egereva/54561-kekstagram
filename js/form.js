@@ -47,15 +47,11 @@ for (var i = 0; i < filters.length; i++) {
 var controlDec = document.querySelector('.upload-resize-controls-button-dec');
 var controlInc = document.querySelector('.upload-resize-controls-button-inc');
 var controlValue = document.querySelector('.upload-resize-controls-value');
+var value = parseInt(controlValue.value, 10);
 
 var decValue = function (min, n) {
-  var value = parseInt(controlValue.value, 10);
   if (value > min) {
     value = value - n;
-    if (value === min) {
-      controlDec.disabled = true;
-      controlInc.disabled = false;
-    }
     return value;
   } else {
     return value;
@@ -63,29 +59,33 @@ var decValue = function (min, n) {
 };
 
 var incValue = function (max, n) {
-  var value = parseInt(controlValue.value, 10);
   if (value < max) {
     value = value + n;
-    if (value === max) {
-      controlInc.disabled = true;
-      controlDec.disabled = false;
-    }
     return value;
   } else {
     return value;
   }
 };
 
-preview.style.transform = 'scale(' + parseInt(controlValue.value, 10) / 100 + ')';
+
+preview.style.transform = 'scale(' + value / 100 + ')';
 
 controlDec.addEventListener('click', function () {
-  var value = decValue(25, 25);
+  value = decValue(25, 25);
+  if (value === 25) {
+    controlDec.disabled = true;
+    controlInc.disabled = false;
+  }
   controlValue.value = value + '%';
   preview.style.transform = 'scale(' + value / 100 + ')';
 });
 
 controlInc.addEventListener('click', function () {
-  var value = incValue(100, 25);
+  value = incValue(100, 25);
+  if (value === 100) {
+    controlInc.disabled = true;
+    controlDec.disabled = false;
+  }
   controlValue.value = value + '%';
   preview.style.transform = 'scale(' + value / 100 + ')';
 });
