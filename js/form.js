@@ -22,19 +22,13 @@ uploadFormCancel.addEventListener('click', function () {
 var filters = document.getElementsByName('upload-filter');
 var preview = document.querySelector('.filter-image-preview');
 
-var setFilterName = function () {
-  for (var i = 0; i < filters.length; i++) {
-    if (filters[i].checked) {
-      preview.classList.add('filter-' + filters[i].value);
-    } else {
-      preview.classList.remove('filter-' + filters[i].value);
-    }
-  }
-};
 
 var clickControl = function (control) {
   control.addEventListener('click', function () {
-    setFilterName();
+    preview.className = 'filter-image-preview'; // если совсем очистить className, то потом проблема с присвоением класса начинается, т.к. класс .filter-image-preview удален и preview не находится. Можно делать вот так? Но, получается, если кем-то будет добавлен новый класс какой-то элементу, то он будет теряться на этом шаге? Есть ли более грамотное решение? Или возможность заранее получать className элемента, а потом его же возвращать?
+    if (control.checked) {
+      preview.classList.add('filter-' + control.value);
+    }
   });
 };
 
@@ -47,33 +41,36 @@ for (var i = 0; i < filters.length; i++) {
 var controlDec = document.querySelector('.upload-resize-controls-button-dec');
 var controlInc = document.querySelector('.upload-resize-controls-button-inc');
 var controlValue = document.querySelector('.upload-resize-controls-value');
-var value = parseInt(controlValue.value, 10);
 
-var decValue = function (min, n) {
-  if (value > min) {
-    value = value - n;
-    return value;
+
+var decValue = function (valueControl, min, n) {
+  if (valueControl > min) {
+    valueControl = valueControl - n;
+    return valueControl;
   } else {
-    return value;
+    return valueControl;
   }
 };
 
-var incValue = function (max, n) {
-  if (value < max) {
-    value = value + n;
-    return value;
+var incValue = function (valueControl, max, n) {
+  if (valueControl < max) {
+    valueControl = valueControl + n;
+    return valueControl;
   } else {
-    return value;
+    return valueControl;
   }
 };
 
 
-preview.style.transform = 'scale(' + value / 100 + ')';
+preview.style.transform = 'scale(' + parseInt(controlValue.value, 10) / 100 + ')'; // тут же мы просто ресайзим фото под дефолтное значение? а само значение в html указано. или это все равно нужно в html как-то перенести?
 
 controlDec.addEventListener('click', function () {
-  value = decValue(25, 25);
+  var value = decValue(parseInt(controlValue.value, 10), 25, 25);
   if (value === 25) {
     controlDec.disabled = true;
+    controlInc.disabled = false;
+  } else {
+    controlDec.disabled = false;
     controlInc.disabled = false;
   }
   controlValue.value = value + '%';
@@ -81,10 +78,13 @@ controlDec.addEventListener('click', function () {
 });
 
 controlInc.addEventListener('click', function () {
-  value = incValue(100, 25);
+  var value = incValue(parseInt(controlValue.value, 10), 100, 25);
   if (value === 100) {
     controlInc.disabled = true;
     controlDec.disabled = false;
+  } else {
+    controlDec.disabled = false;
+    controlInc.disabled = false;
   }
   controlValue.value = value + '%';
   preview.style.transform = 'scale(' + value / 100 + ')';
