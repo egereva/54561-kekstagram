@@ -45,8 +45,7 @@ var controlValue = document.querySelector('.upload-resize-controls-value');
 
 var decValue = function (valueControl, min, n) {
   if (valueControl > min) {
-    valueControl = valueControl - n;
-    return valueControl;
+    return (valueControl - n);
   } else {
     return valueControl;
   }
@@ -54,16 +53,14 @@ var decValue = function (valueControl, min, n) {
 
 var incValue = function (valueControl, max, n) {
   if (valueControl < max) {
-    valueControl = valueControl + n;
-    return valueControl;
+    return (valueControl + n);
   } else {
     return valueControl;
   }
 };
 
 
-preview.style.transform = 'scale(' + parseInt(controlValue.value, 10) / 100 + ')'; // тут же мы просто ресайзим фото под дефолтное значение? а само значение в html указано. или это все равно нужно в html как-то перенести?
-
+preview.style.transform = 'scale(' + parseInt(controlValue.value, 10) / 100 + ')'; // на этом моменте ужасным образом туплю. смотри как работает моя логика: я же тут не задаю значение? я задаю стиль для preview, чтобы фотография была в том масштабе, который указан в дефолтном значении. если я уберу эту строчку, а в html укажу 50%, то на размере фото это никак не скажется. а должно же?..объясни, что именно не так в этой мыслЕ?)))
 controlDec.addEventListener('click', function () {
   var value = decValue(parseInt(controlValue.value, 10), 25, 25);
   if (value === 25) {
