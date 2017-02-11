@@ -7,34 +7,113 @@ var uploadFile = uploadSelectImage.querySelector('#upload-file');
 var uploadOverlay = document.querySelector('.upload-overlay');
 var uploadFormCancel = document.querySelector('.upload-form-cancel');
 
-uploadFile.addEventListener('change', function () {
+var ENTER_KEY_CODE = 13;
+var ESCAPE_KEY_CODE = 27;
+
+var isActivateEvent = function (evt) {
+  return evt.keyCode && evt.keyCode === ENTER_KEY_CODE;
+};
+
+var setupKeydownHandler = function (evt) {
+  if (evt.keyCode === ESCAPE_KEY_CODE) {
+    closeUploadOverlayElement();
+  }
+};
+
+var showUploadOverlayElement = function () {
   uploadOverlay.classList.remove('invisible');
   uploadSelectImage.classList.add('invisible');
+  toggleAriaHidden(uploadOverlay);
+
+  document.addEventListener('keydown', setupKeydownHandler);
+};
+
+var closeUploadOverlayElement = function () {
+  uploadOverlay.classList.add('invisible');
+  uploadSelectImage.classList.remove('invisible');
+  toggleAriaHidden(uploadOverlay);
+
+  document.addEventListener('keydown', setupKeydownHandler);
+};
+
+var toggleAriaPressed = function (element) {
+  if (element.getAttribute('aria-pressed') === 'false') {
+    element.setAttribute('aria-pressed', true);
+  } else {
+    element.setAttribute('aria-pressed', false);
+  }
+}; // снова сложности с пониманием этой функции. как должен переключаться aria-pressed? когда он должен становиться true и возвращаться в false?
+
+var toggleAriaHidden = function (element) {
+  if (element.getAttribute('aria-hidden') === 'true') {
+    element.setAttribute('aria-hidden', false);
+  } else {
+    element.setAttribute('aria-hidden', true);
+  }
+};
+
+
+uploadFile.addEventListener('change', function () {
+  showUploadOverlayElement();
 });
 
 uploadFormCancel.addEventListener('click', function () {
-  uploadOverlay.classList.add('invisible');
-  uploadSelectImage.classList.remove('invisible');
+  closeUploadOverlayElement();
 });
 
 // 3 задание
 
-var filters = document.getElementsByName('upload-filter');
+// var filters = document.getElementsByName('upload-filter');
 var preview = document.querySelector('.filter-image-preview');
+// var filtersLabels = document.querySelectorAll('.upload-filter-label');
+var uploadFilterControls = document.querySelector('.upload-filter-controls');
 
+uploadFilterControls.onclick = function (event) {
+  var target = event.target;
 
-var clickControl = function (control) {
+  if (target.tagName !== 'INPUT') {
+    return;
+  } else {
+    preview.className = 'filter-image-preview';
+    preview.classList.add('filter-' + target.value);
+    toggleAriaPressed(target);
+  }
+};
+
+uploadFilterControls.addEventListener('focus', function () {
+  if (event.target.tagName === 'LABEL') {
+    event.target.addEventListener('keydown', function (evt) {
+      if (isActivateEvent(evt)) {
+        preview.className = 'filter-image-preview';
+        preview.classList.add('filter-' + event.target.previousElementSibling.value);
+        toggleAriaPressed(event.target);
+      }
+    });
+  }
+}, true);
+
+/* пока закомментировала то, что было до попытки делегирования
+
+var changeControl = function (control, controlLabels) {
   control.addEventListener('click', function () {
-    preview.className = 'filter-image-preview'; // если совсем очистить className, то потом проблема с присвоением класса начинается, т.к. класс .filter-image-preview удален и preview не находится. Можно делать вот так? Но, получается, если кем-то будет добавлен новый класс какой-то элементу, то он будет теряться на этом шаге? Есть ли более грамотное решение? Или возможность заранее получать className элемента, а потом его же возвращать?
+    preview.className = 'filter-image-preview';
     if (control.checked) {
+      preview.classList.add('filter-' + control.value);
+    }
+  });
+
+  controlLabels.addEventListener('keydown', function (evt) {
+    if (isActivateEvent(evt)) {
+      preview.className = 'filter-image-preview';
       preview.classList.add('filter-' + control.value);
     }
   });
 };
 
 for (var i = 0; i < filters.length; i++) {
-  clickControl(filters[i]);
+  changeControl(filters[i], filtersLabels[i]);
 }
+*/
 
 // 4 задание
 
@@ -59,8 +138,6 @@ var incValue = function (valueControl, max, n) {
   }
 };
 
-
-preview.style.transform = 'scale(' + parseInt(controlValue.value, 10) / 100 + ')'; // на этом моменте ужасным образом туплю. смотри как работает моя логика: я же тут не задаю значение? я задаю стиль для preview, чтобы фотография была в том масштабе, который указан в дефолтном значении. если я уберу эту строчку, а в html укажу 50%, то на размере фото это никак не скажется. а должно же?..объясни, что именно не так в этой мыслЕ?)))
 controlDec.addEventListener('click', function () {
   var value = decValue(parseInt(controlValue.value, 10), 25, 25);
   if (value === 25) {
