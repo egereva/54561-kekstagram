@@ -52,7 +52,6 @@ var toggleAriaHidden = function (element) {
   }
 };
 
-
 uploadFile.addEventListener('change', function () {
   showUploadOverlayElement();
 });
@@ -68,7 +67,7 @@ var preview = document.querySelector('.filter-image-preview');
 // var filtersLabels = document.querySelectorAll('.upload-filter-label');
 var uploadFilterControls = document.querySelector('.upload-filter-controls');
 
-uploadFilterControls.onclick = function (event) {
+uploadFilterControls.addEventListener('click', function () {
   var target = event.target;
 
   if (target.tagName !== 'INPUT') {
@@ -78,17 +77,16 @@ uploadFilterControls.onclick = function (event) {
     preview.classList.add('filter-' + target.value);
     toggleAriaPressed(target);
   }
-};
+}, false);
 
-uploadFilterControls.addEventListener('focus', function () {
-  if (event.target.tagName === 'LABEL') {
-    event.target.addEventListener('keydown', function (evt) {
-      if (isActivateEvent(evt)) {
-        preview.className = 'filter-image-preview';
-        preview.classList.add('filter-' + event.target.previousElementSibling.value);
-        toggleAriaPressed(event.target);
-      }
-    });
+uploadFilterControls.addEventListener('keydown', function (evt) {
+  if (isActivateEvent(evt)) {
+    if (event.target.tagName === 'LABEL') {
+      preview.className = 'filter-image-preview';
+      event.target.previousElementSibling.checked = true;  // вот тут я использую previousElementSibling - это больше похоже на подгон и не слишком правильно, хоть и работает, да? Получается же, что если кто-то поменяет что-нибудь местами, то всё поломается? Подскажи, как можно грамотно указать на input по label, с которым он связан (в ситуации, когда input не вложен в label)?
+      preview.classList.add('filter-' + event.target.previousElementSibling.value);
+      toggleAriaPressed(event.target);
+    }
   }
 }, true);
 
