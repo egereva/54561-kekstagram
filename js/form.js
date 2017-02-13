@@ -33,16 +33,13 @@ var closeUploadOverlayElement = function () {
   uploadSelectImage.classList.remove('invisible');
   toggleAriaHidden(uploadOverlay);
 
-  document.addEventListener('keydown', setupKeydownHandler);
+  document.removeEventListener('keydown', setupKeydownHandler);
 };
 
 var toggleAriaPressed = function (element) {
-  if (element.getAttribute('aria-pressed') === 'false') {
-    element.setAttribute('aria-pressed', true);
-  } else {
-    element.setAttribute('aria-pressed', false);
-  }
-}; // снова сложности с пониманием этой функции. как должен переключаться aria-pressed? когда он должен становиться true и возвращаться в false?
+  var pressed = (element.getAttribute('aria-pressed') === 'true');
+  element.setAttribute('aria-pressed', !pressed);
+}; // комментарий все же актуален. не понимаю этот момент.
 
 var toggleAriaHidden = function (element) {
   if (element.getAttribute('aria-hidden') === 'true') {
@@ -70,7 +67,7 @@ var uploadFilterControls = document.querySelector('.upload-filter-controls');
 uploadFilterControls.addEventListener('click', function () {
   var target = event.target;
 
-  if (target.tagName !== 'INPUT') {
+  if (target.tagName.toLowerCase() !== 'input') {
     return;
   } else {
     preview.className = 'filter-image-preview';
@@ -81,10 +78,12 @@ uploadFilterControls.addEventListener('click', function () {
 
 uploadFilterControls.addEventListener('keydown', function (evt) {
   if (isActivateEvent(evt)) {
-    if (event.target.tagName === 'LABEL') {
+    if (event.target.tagName.toLowerCase() === 'label') {
       preview.className = 'filter-image-preview';
-      event.target.previousElementSibling.checked = true;  // вот тут я использую previousElementSibling - это больше похоже на подгон и не слишком правильно, хоть и работает, да? Получается же, что если кто-то поменяет что-нибудь местами, то всё поломается? Подскажи, как можно грамотно указать на input по label, с которым он связан (в ситуации, когда input не вложен в label)?
-      preview.classList.add('filter-' + event.target.previousElementSibling.value);
+      var labelFor = event.target.getAttribute('for');
+      var input = document.getElementById(labelFor);
+      input.checked = true;
+      preview.classList.add('filter-' + input.value);
       toggleAriaPressed(event.target);
     }
   }
