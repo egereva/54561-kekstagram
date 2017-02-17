@@ -1,7 +1,5 @@
 'use strict';
 
-// 1 и 2 задания
-
 var uploadSelectImage = document.querySelector('#upload-select-image');
 var uploadFile = uploadSelectImage.querySelector('#upload-file');
 var uploadOverlay = document.querySelector('.upload-overlay');
@@ -39,11 +37,7 @@ var closeUploadOverlayElement = function () {
 var toggleFilterAriaPressed = function () {
   var inputs = document.getElementsByName('upload-filter');
   for (var i = 0; i < inputs.length; i++) {
-    if (inputs[i].checked) {
-      inputs[i].setAttribute('aria-pressed', true);
-    } else {
-      inputs[i].setAttribute('aria-pressed', false);
-    }
+    inputs[i].setAttribute('aria-pressed', inputs[i].checked);
   }
 };
 
@@ -64,11 +58,7 @@ uploadFormCancel.addEventListener('click', function () {
   closeUploadOverlayElement();
 });
 
-// 3 задание
-
-// var filters = document.getElementsByName('upload-filter');
 var preview = document.querySelector('.filter-image-preview');
-// var filtersLabels = document.querySelectorAll('.upload-filter-label');
 var uploadFilterControls = document.querySelector('.upload-filter-controls');
 
 uploadFilterControls.addEventListener('click', function () {
@@ -94,31 +84,6 @@ uploadFilterControls.addEventListener('keydown', function (evt) {
     }
   }
 }, true);
-
-/* пока закомментировала то, что было до попытки делегирования
-
-var changeControl = function (control, controlLabels) {
-  control.addEventListener('click', function () {
-    preview.className = 'filter-image-preview';
-    if (control.checked) {
-      preview.classList.add('filter-' + control.value);
-    }
-  });
-
-  controlLabels.addEventListener('keydown', function (evt) {
-    if (isActivateEvent(evt)) {
-      preview.className = 'filter-image-preview';
-      preview.classList.add('filter-' + control.value);
-    }
-  });
-};
-
-for (var i = 0; i < filters.length; i++) {
-  changeControl(filters[i], filtersLabels[i]);
-}
-*/
-
-// 4 задание
 
 var controlDec = document.querySelector('.upload-resize-controls-button-dec');
 var controlInc = document.querySelector('.upload-resize-controls-button-inc');
