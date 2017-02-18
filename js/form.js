@@ -1,42 +1,89 @@
 'use strict';
 
-// 1 и 2 задания
-
 var uploadSelectImage = document.querySelector('#upload-select-image');
 var uploadFile = uploadSelectImage.querySelector('#upload-file');
 var uploadOverlay = document.querySelector('.upload-overlay');
 var uploadFormCancel = document.querySelector('.upload-form-cancel');
 
-uploadFile.addEventListener('change', function () {
+var ENTER_KEY_CODE = 13;
+var ESCAPE_KEY_CODE = 27;
+
+var isActivateEvent = function (evt) {
+  return evt.keyCode && evt.keyCode === ENTER_KEY_CODE;
+};
+
+var setupKeydownHandler = function (evt) {
+  if (evt.keyCode === ESCAPE_KEY_CODE) {
+    closeUploadOverlayElement();
+  }
+};
+
+var showUploadOverlayElement = function () {
   uploadOverlay.classList.remove('invisible');
   uploadSelectImage.classList.add('invisible');
+  toggleAriaHidden(uploadOverlay);
+
+  document.addEventListener('keydown', setupKeydownHandler);
+};
+
+var closeUploadOverlayElement = function () {
+  uploadOverlay.classList.add('invisible');
+  uploadSelectImage.classList.remove('invisible');
+  toggleAriaHidden(uploadOverlay);
+
+  document.removeEventListener('keydown', setupKeydownHandler);
+};
+
+var toggleFilterAriaPressed = function () {
+  var inputs = document.getElementsByName('upload-filter');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].setAttribute('aria-pressed', inputs[i].checked);
+  }
+};
+
+
+var toggleAriaHidden = function (element) {
+  if (element.getAttribute('aria-hidden') === 'true') {
+    element.setAttribute('aria-hidden', false);
+  } else {
+    element.setAttribute('aria-hidden', true);
+  }
+};
+
+uploadFile.addEventListener('change', function () {
+  showUploadOverlayElement();
 });
 
 uploadFormCancel.addEventListener('click', function () {
-  uploadOverlay.classList.add('invisible');
-  uploadSelectImage.classList.remove('invisible');
+  closeUploadOverlayElement();
 });
 
-// 3 задание
-
-var filters = document.getElementsByName('upload-filter');
 var preview = document.querySelector('.filter-image-preview');
+var uploadFilterControls = document.querySelector('.upload-filter-controls');
 
+uploadFilterControls.addEventListener('click', function () {
+  var target = event.target;
+  if (target.tagName.toLowerCase() !== 'input') {
+    return;
+  } else {
+    preview.className = 'filter-image-preview';
+    preview.classList.add('filter-' + target.value);
+  }
+  toggleFilterAriaPressed();
+}, false);
 
-var clickControl = function (control) {
-  control.addEventListener('click', function () {
-    preview.className = 'filter-image-preview'; // если совсем очистить className, то потом проблема с присвоением класса начинается, т.к. класс .filter-image-preview удален и preview не находится. Можно делать вот так? Но, получается, если кем-то будет добавлен новый класс какой-то элементу, то он будет теряться на этом шаге? Есть ли более грамотное решение? Или возможность заранее получать className элемента, а потом его же возвращать?
-    if (control.checked) {
-      preview.classList.add('filter-' + control.value);
+uploadFilterControls.addEventListener('keydown', function (evt) {
+  if (isActivateEvent(evt)) {
+    if (event.target.tagName.toLowerCase() === 'label') {
+      preview.className = 'filter-image-preview';
+      var labelFor = event.target.getAttribute('for');
+      var input = document.getElementById(labelFor);
+      input.checked = true;
+      preview.classList.add('filter-' + input.value);
+      toggleFilterAriaPressed();
     }
-  });
-};
-
-for (var i = 0; i < filters.length; i++) {
-  clickControl(filters[i]);
-}
-
-// 4 задание
+  }
+}, true);
 
 var controlDec = document.querySelector('.upload-resize-controls-button-dec');
 var controlInc = document.querySelector('.upload-resize-controls-button-inc');
@@ -59,8 +106,6 @@ var incValue = function (valueControl, max, n) {
   }
 };
 
-
-preview.style.transform = 'scale(' + parseInt(controlValue.value, 10) / 100 + ')'; // на этом моменте ужасным образом туплю. смотри как работает моя логика: я же тут не задаю значение? я задаю стиль для preview, чтобы фотография была в том масштабе, который указан в дефолтном значении. если я уберу эту строчку, а в html укажу 50%, то на размере фото это никак не скажется. а должно же?..объясни, что именно не так в этой мыслЕ?)))
 controlDec.addEventListener('click', function () {
   var value = decValue(parseInt(controlValue.value, 10), 25, 25);
   if (value === 25) {
