@@ -3,16 +3,8 @@
 window.initializeFilters = (function () {
   var preview = document.querySelector('.filter-image-preview');
   var uploadFilterControls = document.querySelector('.upload-filter-controls');
-  var defaultFilter = document.getElementById('upload-filter-none');
 
   return function () {
-
-    var toggleFilterAriaPressed = function () {
-      var inputs = document.getElementsByName('upload-filter');
-      for (var i = 0; i < inputs.length; i++) {
-        inputs[i].setAttribute('aria-pressed', inputs[i].checked);
-      }
-    };
 
     uploadFilterControls.addEventListener('click', function () {
       var target = event.target;
@@ -22,7 +14,7 @@ window.initializeFilters = (function () {
         preview.className = 'filter-image-preview';
         preview.classList.add('filter-' + target.value);
       }
-      toggleFilterAriaPressed();
+      window.utils.toggleFilterAriaPressed();
     }, false);
 
     uploadFilterControls.addEventListener('keydown', function (evt) {
@@ -33,16 +25,11 @@ window.initializeFilters = (function () {
           var input = document.getElementById(labelFor);
           input.checked = true;
           preview.classList.add('filter-' + input.value);
-          toggleFilterAriaPressed();
+          window.utils.toggleFilterAriaPressed();
         }
       }
     }, true);
 
-    return function () {
-      preview.className = 'filter-image-preview';
-      preview.classList.add('filter-' + defaultFilter.value);
-      toggleFilterAriaPressed();
-    };
   };
 
 })();

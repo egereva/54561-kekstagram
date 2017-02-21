@@ -13,6 +13,8 @@ window.utils = (function () {
   var uploadSelectImage = document.querySelector('#upload-select-image');
   var uploadOverlay = document.querySelector('.upload-overlay');
 
+  var defaultFilter = document.getElementById('upload-filter-none');
+
   var setupKeydownHandler = function (evt) {
     if (evt.keyCode === ESCAPE_KEY_CODE) {
       closeUploadOverlayElement();
@@ -36,6 +38,13 @@ window.utils = (function () {
     }
   };
 
+  var toggleFilterAriaPressed = function () {
+    var inputs = document.getElementsByName('upload-filter');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].setAttribute('aria-pressed', inputs[i].checked);
+    }
+  };
+
   return {
     isActivateEvent: function (evt) {
       return evt.keyCode && evt.keyCode === ENTER_KEY_CODE;
@@ -55,13 +64,17 @@ window.utils = (function () {
     },
 
     setDefaultValue: function () {
-      (window.initializeFilters())();
+      preview.className = 'filter-image-preview';
+      preview.classList.add('filter-' + defaultFilter.value);
+      toggleFilterAriaPressed();
 
       controlValue.value = VALUE_SCALE + '%';
       preview.style.transform = 'scale(' + VALUE_SCALE / 100 + ')';
       controlDec.disabled = false;
       controlInc.disabled = true;
     },
+
+    toggleFilterAriaPressed: toggleFilterAriaPressed,
 
     closeUploadOverlayElement: closeUploadOverlayElement,
 
