@@ -4,6 +4,12 @@ window.utils = (function () {
   var ENTER_KEY_CODE = 13;
   var ESCAPE_KEY_CODE = 27;
 
+  var controlValue = document.querySelector('.upload-resize-controls-value');
+  var preview = document.querySelector('.filter-image-preview');
+  var controlDec = document.querySelector('.upload-resize-controls-button-dec');
+  var controlInc = document.querySelector('.upload-resize-controls-button-inc');
+  var VALUE_SCALE = 100;
+
   var uploadSelectImage = document.querySelector('#upload-select-image');
   var uploadOverlay = document.querySelector('.upload-overlay');
 
@@ -19,6 +25,7 @@ window.utils = (function () {
     toggleAriaHidden(uploadOverlay);
 
     document.removeEventListener('keydown', setupKeydownHandler);
+
   };
 
   var toggleAriaHidden = function (element) {
@@ -34,14 +41,30 @@ window.utils = (function () {
       return evt.keyCode && evt.keyCode === ENTER_KEY_CODE;
     },
 
-    showUploadOverlayElement: function () {
+    showUploadOverlayElement: function (callback) {
       uploadOverlay.classList.remove('invisible');
       uploadSelectImage.classList.add('invisible');
       toggleAriaHidden(uploadOverlay);
 
       document.addEventListener('keydown', setupKeydownHandler);
+
+      if (typeof callback === 'function') {
+        callback();
+      }
+
     },
 
-    closeUploadOverlayElement: closeUploadOverlayElement
+    setDefaultValue: function () {
+      (window.initializeFilters())();
+
+      controlValue.value = VALUE_SCALE + '%';
+      preview.style.transform = 'scale(' + VALUE_SCALE / 100 + ')';
+      controlDec.disabled = false;
+      controlInc.disabled = true;
+    },
+
+    closeUploadOverlayElement: closeUploadOverlayElement,
+
+    valueScale: VALUE_SCALE
   };
 })();

@@ -5,9 +5,7 @@ window.initializeScale = (function () {
   var controlInc = document.querySelector('.upload-resize-controls-button-inc');
   var preview = document.querySelector('.filter-image-preview');
 
-  return function (controlValue, ValueScale, step) {
-    controlValue.value = ValueScale + '%';
-    preview.style.transform = 'scale(' + ValueScale / 100 + ')';
+  return function (controlValue, valueScale, step) {
 
     var decValue = function (valueControl, min) {
       if (valueControl > min) {
@@ -26,7 +24,7 @@ window.initializeScale = (function () {
     };
 
     controlDec.addEventListener('click', function () {
-      var value = decValue(parseInt(controlValue.value, 10), 25, step);
+      var value = decValue(parseInt(controlValue.value, 10), 25);
       if (value === 25) {
         controlDec.disabled = true;
         controlInc.disabled = false;
@@ -39,7 +37,7 @@ window.initializeScale = (function () {
     });
 
     controlInc.addEventListener('click', function () {
-      var value = incValue(parseInt(controlValue.value, 10), 100, step);
+      var value = incValue(parseInt(controlValue.value, 10), 100);
       if (value === 100) {
         controlInc.disabled = true;
         controlDec.disabled = false;
@@ -50,5 +48,7 @@ window.initializeScale = (function () {
       controlValue.value = value + '%';
       preview.style.transform = 'scale(' + value / 100 + ')';
     });
+
   };
+
 })();
