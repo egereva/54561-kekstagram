@@ -4,16 +4,14 @@ window.utils = (function () {
   var ENTER_KEY_CODE = 13;
   var ESCAPE_KEY_CODE = 27;
 
-  var controlValue = document.querySelector('.upload-resize-controls-value');
-  var preview = document.querySelector('.filter-image-preview');
-  var controlDec = document.querySelector('.upload-resize-controls-button-dec');
-  var controlInc = document.querySelector('.upload-resize-controls-button-inc');
-
-
   var uploadSelectImage = document.querySelector('#upload-select-image');
   var uploadOverlay = document.querySelector('.upload-overlay');
 
   var defaultFilter = document.getElementById('upload-filter-none');
+  var controlValue = document.querySelector('.upload-resize-controls-value');
+  var preview = document.querySelector('.filter-image-preview');
+  var controlDec = document.querySelector('.upload-resize-controls-button-dec');
+  var controlInc = document.querySelector('.upload-resize-controls-button-inc');
 
   var setupKeydownHandler = function (evt) {
     if (evt.keyCode === ESCAPE_KEY_CODE) {
@@ -63,20 +61,19 @@ window.utils = (function () {
 
     },
 
-    setDefaultValue: function (VALUE_SCALE) {
+    setDefaultValue: function (defaultValue) {
       preview.className = 'filter-image-preview';
       preview.classList.add('filter-' + defaultFilter.value);
       toggleFilterAriaPressed();
 
-      controlValue.value = VALUE_SCALE + '%';
-      preview.style.transform = 'scale(' + VALUE_SCALE / 100 + ')';
+      controlValue.value = defaultValue + '%';
+      preview.style.transform = 'scale(' + defaultValue / 100 + ')';
       controlDec.disabled = false;
       controlInc.disabled = true;
     },
 
     toggleFilterAriaPressed: toggleFilterAriaPressed,
 
-    closeUploadOverlayElement: closeUploadOverlayElement,
-
+    closeUploadOverlayElement: closeUploadOverlayElement
   };
 })();
