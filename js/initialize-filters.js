@@ -9,13 +9,12 @@ window.initializeFilters = (function () {
       var target = event.target;
       if (target.tagName.toLowerCase() !== 'input') {
         return;
-      } else {
-        var newFilter = target.value;
       }
+
       window.utils.toggleFilterAriaPressed();
 
       if (typeof callback === 'function') {
-        callback(newFilter);
+        callback(target.value);
       }
     }, false);
 
@@ -25,12 +24,11 @@ window.initializeFilters = (function () {
           var labelFor = event.target.getAttribute('for');
           var input = document.getElementById(labelFor);
           input.checked = true;
-          var newFilter = input.value;
           window.utils.toggleFilterAriaPressed();
         }
       }
       if (typeof callback === 'function') {
-        callback(newFilter);
+        callback(input.value);
       }
     }, true);
 
