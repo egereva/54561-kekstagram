@@ -16,9 +16,7 @@
     window.utils.closeUploadOverlayElement();
   });
 
-  window.initializeScale(document.querySelector('.upload-resize-controls-value'), DEFAULT_VALUE, STEP);
-  window.initializeFilters();
+  window.initializeScale(document.querySelector('.upload-resize-controls-value'), DEFAULT_VALUE, STEP, window.utils.adjustScale);
+  window.initializeFilters(window.utils.applyFilter);
 
 })();
-
-// отправляю работу без изменений, т.к. вроде по этому заданию уже всё сделано в рамках предыдущего

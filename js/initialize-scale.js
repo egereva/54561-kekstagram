@@ -3,9 +3,9 @@
 window.initializeScale = (function () {
   var controlDec = document.querySelector('.upload-resize-controls-button-dec');
   var controlInc = document.querySelector('.upload-resize-controls-button-inc');
-  var preview = document.querySelector('.filter-image-preview');
+  var controls = document.querySelector('.upload-resize-controls');
 
-  return function (controlValue, valueScale, step) {
+  return function (controlValue, valueScale, step, callback) {
 
     var decValue = function (valueControl, min) {
       if (valueControl > min) {
@@ -23,32 +23,33 @@ window.initializeScale = (function () {
       }
     };
 
-    controlDec.addEventListener('click', function () {
-      var value = decValue(parseInt(controlValue.value, 10), 25);
-      if (value === 25) {
-        controlDec.disabled = true;
-        controlInc.disabled = false;
-      } else {
-        controlDec.disabled = false;
-        controlInc.disabled = false;
+    controls.addEventListener('click', function (event) {
+      if (event.target === controlDec) {
+        valueScale = decValue(parseInt(controlValue.value, 10), 25);
+        if (valueScale === 25) {
+          controlDec.disabled = true;
+          controlInc.disabled = false;
+        } else {
+          controlDec.disabled = false;
+          controlInc.disabled = false;
+        }
       }
-      controlValue.value = value + '%';
-      preview.style.transform = 'scale(' + value / 100 + ')';
-    });
 
-    controlInc.addEventListener('click', function () {
-      var value = incValue(parseInt(controlValue.value, 10), 100);
-      if (value === 100) {
-        controlInc.disabled = true;
-        controlDec.disabled = false;
-      } else {
-        controlDec.disabled = false;
-        controlInc.disabled = false;
+      if (event.target === controlInc) {
+        valueScale = incValue(parseInt(controlValue.value, 10), 100);
+        if (valueScale === 100) {
+          controlInc.disabled = true;
+          controlDec.disabled = false;
+        } else {
+          controlDec.disabled = false;
+          controlInc.disabled = false;
+        }
       }
-      controlValue.value = value + '%';
-      preview.style.transform = 'scale(' + value / 100 + ')';
-    });
 
+      if (typeof callback === 'function') {
+        callback(valueScale);
+      }
+    }, false);
   };
 
 })();
