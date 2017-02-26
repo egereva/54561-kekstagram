@@ -53,7 +53,7 @@
 
     getPictures(pictures);
 
-    filtersBlock.classList.remove('hidden'); // в условии класс invisible, но в верстке вроде hidden
+    filtersBlock.classList.remove('hidden');
 
     filtersBlock.addEventListener('click', function (event) {
       if (event.target.tagName.toLowerCase() !== 'input') {
