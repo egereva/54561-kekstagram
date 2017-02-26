@@ -8,34 +8,35 @@
   var url = 'https://intensive-javascript-server-myophkugvq.now.sh/kekstagram/data';
   var filtersBlock = document.querySelector('.filters');
 
+  var getPictures = function (arr) {
+    arr.forEach(function (picture) {
+      var pictureElement = pictureContent.cloneNode(true);
+      var imgPictureElement = pictureElement.children[0];
+      var pictureLikes = pictureElement.querySelector('.picture-likes');
+      var pictureComments = pictureElement.querySelector('.picture-comments');
+
+      imgPictureElement.src = picture.url;
+      pictureLikes.innerText = picture.likes;
+      pictureComments.innerText = picture.comments.length;
+      picturesBlock.appendChild(pictureElement);
+
+      pictureElement.addEventListener('click', function (evt) {
+        evt.preventDefault();
+        window.showGalery(picture);
+      });
+
+      pictureElement.addEventListener('keydown', function (evt) {
+        if (window.utils.isActivateEvent(evt)) {
+          window.showGalery(picture);
+        }
+      });
+    });
+  };
+
   var onLoad = function (xhr) {
     var target = xhr.target;
     pictures = target.response;
 
-    var getPictures = function () {
-      pictures.forEach(function (picture) {
-        var pictureElement = pictureContent.cloneNode(true);
-        var imgPictureElement = pictureElement.children[0];
-        var pictureLikes = pictureElement.querySelector('.picture-likes');
-        var pictureComments = pictureElement.querySelector('.picture-comments');
-
-        imgPictureElement.src = picture.url;
-        pictureLikes.innerText = picture.likes;
-        pictureComments.innerText = picture.comments.length;
-        picturesBlock.appendChild(pictureElement);
-
-        pictureElement.addEventListener('click', function (evt) {
-          evt.preventDefault();
-          window.showGalery(picture);
-        });
-
-        pictureElement.addEventListener('keydown', function (evt) {
-          if (window.utils.isActivateEvent(evt)) {
-            window.showGalery(picture);
-          }
-        });
-      });
-    };
 
     getPictures(pictures);
 
@@ -61,6 +62,7 @@
     };
 
     filtersBlock.addEventListener('click', function (event) {
+      picturesBlock.innerHTML = '';
       switch (event.target.value) {
         case 'popular':
           getPictures(pictures);
