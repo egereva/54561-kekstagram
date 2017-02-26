@@ -24,13 +24,26 @@
         evt.preventDefault();
         window.showGalery(picture);
       });
-
-      pictureElement.addEventListener('keydown', function (evt) {
-        if (window.utils.isActivateEvent(evt)) {
-          window.showGalery(picture);
-        }
-      });
     });
+  };
+
+  var getRandomPicture = function (arr, count) {
+    var copyArr = arr.slice(0);
+    var newArr = [];
+    for (var i = 0; i < count; i++) {
+      var index = Math.floor(Math.random() * copyArr.length);
+      newArr.push(copyArr[index]);
+      copyArr.splice(index, 1);
+    }
+    return newArr;
+  };
+
+  var sortByComments = function (a, b) {
+    return b.comments.length - a.comments.length;
+  };
+
+  var getSortedPictures = function (arr) {
+    return arr.slice().sort(sortByComments);
   };
 
   var onLoad = function (xhr) {
@@ -42,26 +55,10 @@
 
     filtersBlock.classList.remove('hidden'); // в условии класс invisible, но в верстке вроде hidden
 
-    var getRandomPicture = function (arr, count) {
-      var copyArr = arr.slice(0);
-      var newArr = [];
-      for (var i = 0; i < count; i++) {
-        var index = Math.floor(Math.random() * copyArr.length);
-        newArr.push(copyArr[index]);
-        copyArr.splice(index, 1);
-      }
-      return newArr;
-    };
-
-    var sortByComments = function (a, b) {
-      return b.comments.length - a.comments.length;
-    };
-
-    var getSortedPictures = function (arr) {
-      return arr.slice().sort(sortByComments);
-    };
-
     filtersBlock.addEventListener('click', function (event) {
+      if (event.target.tagName.toLowerCase() !== 'input') {
+        return;
+      }
       picturesBlock.innerHTML = '';
       switch (event.target.value) {
         case 'popular':
