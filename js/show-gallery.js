@@ -13,13 +13,13 @@ window.showGalery = (function () {
   var showgalleryOverlay = function () {
     galleryOverlay.classList.remove('invisible');
     galeryCloseElement.focus();
-
+    window.utils.toggleAriaHidden(galleryOverlay);
     document.addEventListener('keydown', setupKeydownHandler);
   };
 
   var closeGalleryOverlay = function () {
     galleryOverlay.classList.add('invisible');
-    window.util.toggleAriaHidden(galleryOverlay);
+    window.utils.toggleAriaHidden(galleryOverlay);
 
     document.removeEventListener('keydown', setupKeydownHandler);
   };

@@ -8,5 +8,8 @@ window.load = (function () {
     xhr.addEventListener('load', onLoad);
     xhr.responseType = 'json';
     xhr.send();
+    if (xhr.status !== 200) {
+      document.write(xhr.status + ': ' + xhr.statusText);
+    }
   };
 })();
