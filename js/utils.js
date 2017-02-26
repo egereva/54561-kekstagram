@@ -44,6 +44,8 @@ window.utils = (function () {
   };
 
   return {
+    toggleAriaHidden: toggleAriaHidden,
+
     isActivateEvent: function (evt) {
       return evt.keyCode && evt.keyCode === ENTER_KEY_CODE;
     },
