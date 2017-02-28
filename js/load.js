@@ -5,11 +5,12 @@ window.load = (function () {
   return function (url, onLoad) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url);
-    xhr.addEventListener('load', onLoad);
+    xhr.addEventListener('load', function (evt) {
+      if (evt.target.status >= 200 && event.target.status < 300) {
+        onLoad(evt.target.response);
+      }
+    });
     xhr.responseType = 'json';
     xhr.send();
-    if (xhr.status !== 200) {
-      document.write(xhr.status + ': ' + xhr.statusText);
-    }
   };
 })();

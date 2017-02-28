@@ -46,10 +46,8 @@
     return arr.slice().sort(sortByComments);
   };
 
-  var onLoad = function (xhr) {
-    var target = xhr.target;
-    pictures = target.response;
-
+  var onLoad = function (data) {
+    pictures = data;
 
     getPictures(pictures);
 
